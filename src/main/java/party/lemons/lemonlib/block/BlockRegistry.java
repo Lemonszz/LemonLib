@@ -86,5 +86,4 @@ public class BlockRegistry
 	{
 		return oreDict;
 	}
-
 }
