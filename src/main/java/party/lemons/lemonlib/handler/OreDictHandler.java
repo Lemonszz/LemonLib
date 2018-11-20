@@ -1,6 +1,5 @@
 package party.lemons.lemonlib.handler;
 
-import com.mojang.realmsclient.util.Pair;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.common.Mod;
@@ -10,6 +9,7 @@ import party.lemons.lemonlib.LemonLib;
 import party.lemons.lemonlib.block.BlockRegistry;
 import party.lemons.lemonlib.event.InitEvent;
 import party.lemons.lemonlib.item.ItemRegistry;
+import party.lemons.lemonlib.util.Pair;
 
 @Mod.EventBusSubscriber(modid = LemonLib.MODID)
 public class OreDictHandler
@@ -19,17 +19,17 @@ public class OreDictHandler
 	{
 		for(Pair<Item, String[]> pair : ItemRegistry.getOreDictEntries())
 		{
-			for(String entry : pair.second())
+			for(String entry : pair.getSecond())
 			{
-				OreDictionary.registerOre(entry, pair.first());
+				OreDictionary.registerOre(entry, pair.getFirst());
 			}
 		}
 
 		for(Pair<Block, String[]> pair : BlockRegistry.getOreDictEntries())
 		{
-			for(String entry : pair.second())
+			for(String entry : pair.getSecond())
 			{
-				OreDictionary.registerOre(entry, pair.first());
+				OreDictionary.registerOre(entry, pair.getFirst());
 			}
 		}
 	}

@@ -13,7 +13,13 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'maven-publish'
 
 
-version = "1.12.2-1.1.0"
+task deobfJar(type: Jar) {
+
+    from sourceSets.main.output
+    classifier = "deobf"
+}
+
+version = "1.12.2-1.3.0"
 group = "party.lemons"
 archivesBaseName = "lemonlib"
 
@@ -48,6 +54,7 @@ compileJava {
 
 artifacts {
     archives sourceJar
+    archives deobfJar
 }
 
 jar {

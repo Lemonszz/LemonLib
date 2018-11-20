@@ -1,6 +1,5 @@
 package party.lemons.lemonlib.block;
 
-import com.mojang.realmsclient.util.Pair;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -12,6 +11,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 import party.lemons.lemonlib.LemonLib;
 import party.lemons.lemonlib.item.IItemModel;
 import party.lemons.lemonlib.item.ItemRegistry;
+import party.lemons.lemonlib.util.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
