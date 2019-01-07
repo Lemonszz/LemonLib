@@ -1,5 +1,6 @@
 package party.lemons.lemonlib.item;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -20,6 +21,7 @@ public class ItemRegistry
 
 	public static Item registerItem(Item item, String name, String... oredict)
 	{
+		Minecraft
 		item.setTranslationKey(MODID + "." + name);
 		item.setRegistryName(MODID, name);
 
