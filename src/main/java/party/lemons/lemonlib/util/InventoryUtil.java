@@ -46,11 +46,7 @@ public class InventoryUtil
 				{
 					if(itemstack.getCount() <= stack.getCount())
 					{
-						int i = itemstack.getMetadata();
-						if(i == Short.MAX_VALUE || i == stack.getMetadata())
-						{
-							return true;
-						}
+						return true;
 					}
 				}
 			}

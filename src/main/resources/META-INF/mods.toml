@@ -1,0 +1,9 @@
+modLoader="javafml"
+loaderVersion="[28,)"
+[[mods]]
+modId="lemonlib"
+version="${file.jarVersion}"
+displayName="Lemonlib"
+description='''
+This is a mob, you don't know what it does. I do. Remove it, you wont. I dare you.
+'''

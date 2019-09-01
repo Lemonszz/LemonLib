@@ -1,9 +1,11 @@
 package party.lemons.lemonlib.ticker;
 
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.world.World;
-import net.minecraft.world.storage.MapStorage;
+import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.storage.DimensionSavedDataManager;
 import net.minecraft.world.storage.WorldSavedData;
 import net.minecraftforge.common.util.Constants;
 import party.lemons.lemonlib.LemonLib;
@@ -17,36 +19,31 @@ public class TickerSavedData extends WorldSavedData
 		super(name);
 	}
 
+	@Override
+	public void read(CompoundNBT nbt)
+	{
+		ListNBT tickers = nbt.getList("tickers", Constants.NBT.TAG_COMPOUND);
+		TickerHandler.readFromNBT(tickers);
+	}
+
+	@Override
+	public CompoundNBT write(CompoundNBT compound)
+	{
+		compound.put("tickers", TickerHandler.writeToNBT());
+
+		return compound;
+	}
+
 	public TickerSavedData()
 	{
 		super(DATA_NAME);
 	}
 
-	@Override
-	public void readFromNBT(NBTTagCompound nbt)
-	{
-		NBTTagList tickers = nbt.getTagList("tickers", Constants.NBT.TAG_COMPOUND);
-		TickerHandler.readFromNBT(tickers);
-	}
-
-	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound compound)
-	{
-		compound.setTag("tickers", TickerHandler.writeToNBT());
-
-		return compound;
-	}
-
 	public static TickerSavedData get(World world)
 	{
-		MapStorage storage = world.getPerWorldStorage();
-		TickerSavedData instance = (TickerSavedData) storage.getOrLoadData(TickerSavedData.class, DATA_NAME);
+		ServerWorld overworld = world.getServer().getWorld(DimensionType.OVERWORLD);
 
-		if(instance == null)
-		{
-			instance = new TickerSavedData();
-			storage.setData(DATA_NAME, instance);
-		}
-		return instance;
+		DimensionSavedDataManager storage = overworld.getSavedData();
+		return storage.getOrCreate(TickerSavedData::new, DATA_NAME);
 	}
 }

@@ -1,6 +1,6 @@
 package party.lemons.lemonlib.ticker;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.World;
 
 public interface ITicker
@@ -11,9 +11,9 @@ public interface ITicker
 
 	void update(World world);
 
-	NBTTagCompound writeToNBT();
+	CompoundNBT writeToNBT();
 
-	void readFromNBT(NBTTagCompound tagCompound);
+	void readFromNBT(CompoundNBT tagCompound);
 
 	boolean isTaskFinished(World world);
 

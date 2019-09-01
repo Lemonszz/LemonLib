@@ -1,13 +1,14 @@
 package party.lemons.lemonlib.ticker;
 
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.world.World;
+import net.minecraft.world.dimension.DimensionType;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import party.lemons.lemonlib.LemonLib;
 
 import java.util.ArrayList;
@@ -47,9 +48,9 @@ public class TickerHandler
 
 	private static void tick(World world)
 	{
-		if(!worldTickers.containsKey(world.provider.getDimension())) return;
+		if(!worldTickers.containsKey(world.getDimension())) return;
 
-		List<ITicker> tickerList = worldTickers.get(world.provider.getDimension());
+		List<ITicker> tickerList = worldTickers.get(world.getDimension());
 		tickerList.stream().forEach(t->t.update(world));
 	}
 
@@ -58,34 +59,33 @@ public class TickerHandler
 		registeredTickers.add((Class<ITicker>) clazz);
 	}
 
-	public static NBTTagList writeToNBT()
+	public static ListNBT writeToNBT()
 	{
-		NBTTagList list = new NBTTagList();
+		ListNBT list = new ListNBT();
 		for(List<ITicker> tickerList : worldTickers.values())
 		{
 			for(ITicker ticker : tickerList)
 			{
-				NBTTagCompound tickerTags = ticker.writeToNBT();
-				tickerTags.setInteger("key", registeredTickers.indexOf(ticker.getClass()));
-				tickerTags.setInteger("dim", ticker.getDimension());
+				CompoundNBT tickerTags = ticker.writeToNBT();
+				tickerTags.putInt("key", registeredTickers.indexOf(ticker.getClass()));
+				tickerTags.putInt("dim", ticker.getDimension());
 
-				list.appendTag(tickerTags);
+				list.add(tickerTags);
 			}
 		}
-
 		return list;
 	}
 
-	public static void readFromNBT(NBTTagList tickerList)
+	public static void readFromNBT(ListNBT tickerList)
 	{
 		worldTickers.clear();
 
-		World world = FMLCommonHandler.instance().getMinecraftServerInstance().getEntityWorld();
-		for(int i = 0; i < tickerList.tagCount(); i++)
+		World world = ServerLifecycleHooks.getCurrentServer().getWorld(DimensionType.OVERWORLD);
+		for(int i = 0; i < tickerList.size(); i++)
 		{
-			NBTTagCompound tag = tickerList.getCompoundTagAt(i);
-			Class<ITicker> clazz = registeredTickers.get(tag.getInteger("key"));
-			int dimID = tag.getInteger("dim");
+			CompoundNBT tag = tickerList.getCompound(i);
+			Class<ITicker> clazz = registeredTickers.get(tag.getInt("key"));
+			int dimID = tag.getInt("dim");
 			try
 			{
 				ITicker ticker = clazz.getConstructor(World.class).newInstance(world);
@@ -110,6 +110,9 @@ public class TickerHandler
 	@SubscribeEvent
 	public static void onWorldLoad(WorldEvent.Load event)
 	{
-		TickerSavedData.get(event.getWorld());
+		if(event.getWorld() instanceof World)
+		{
+		//	TickerSavedData.get((World) event.getWorld());
+		}
 	}
 }
